@@ -18,8 +18,9 @@ public class DeviceService {
         return repository.get(deviceId).map(DeviceConfigurationEditor::toDeviceConfiguration);
     }
 
-    public DeviceConfiguration createDevice(String deviceId) {
+    public DeviceConfiguration createDevice(String deviceId, UpdateDevice update) {
         DeviceConfigurationEditor device = DeviceConfigurationEditor.createNewDevice(deviceId);
+        update.apply(device);
         repository.save(device);
         return device.toDeviceConfiguration();
     }
