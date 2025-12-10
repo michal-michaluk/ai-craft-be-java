@@ -1,7 +1,12 @@
 package devices.configuration.management;
 
-public record Violations(boolean operatorNotAssigned, boolean providerNotAssigned, boolean locationMissing,
-                         boolean showOnMapButMissingLocation, boolean showOnMapButNoPublicAccess) {
+public record Violations(
+        boolean operatorNotAssigned,
+        boolean providerNotAssigned,
+        boolean locationMissing,
+        boolean showOnMapButMissingLocation,
+        boolean showOnMapButNoPublicAccess
+) {
 
     public static Builder builder() {
         return new Builder();

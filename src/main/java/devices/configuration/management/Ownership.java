@@ -6,7 +6,7 @@ public record Ownership(String operator, String provider) {
 
     // Compact constructor for validation
     public Ownership {
-        if (!isUnowned() && !isOwned()) {
+        if ((operator == null && provider != null) || (operator != null && provider == null)) {
             throw new IllegalArgumentException("Ownership must be either unowned (both null) or owned (both set)");
         }
     }

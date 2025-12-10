@@ -1,5 +1,7 @@
 package devices.configuration.management;
 
+import devices.configuration.management.Settings.SettingsDiff;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,13 +69,9 @@ class DeviceConfigurationEditor {
         }
     }
 
-    void updateSettings(Settings settings) {
-        Objects.requireNonNull(settings);
-
-        // Business rule: if showOnMap is true, must have location and publicAccess
-        if (settings.showOnMap() && (location == null || !settings.publicAccess())) {
-            throw new IllegalArgumentException("Cannot show on map without location and public access");
-        }
+    void updateSettings(SettingsDiff diff) {
+        Objects.requireNonNull(diff);
+        Settings settings = this.settings.apply(diff);
 
         if (!Objects.equals(this.settings, settings)) {
             this.settings = settings;
@@ -85,7 +83,8 @@ class DeviceConfigurationEditor {
     private void resetToDefaults() {
         updateLocation(null);
         updateOpeningHours(OpeningHours.alwaysOpened());
-        updateSettings(Settings.defaultSettings());
+        this.settings = Settings.defaultSettings();
+        events.add(new DomainEvent.SettingsUpdated(deviceId, this.settings));
     }
 
     // Method creating state snapshot
