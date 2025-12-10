@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+      author: system
+      changes:
+        - createTable:
+            tableName: device_document
+            columns:
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValue: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: device
+                  type: jsonb
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: b2c3d4e5-f6a7-8901-bcde-f23456789012
+      author: system
+      changes:
+        - createTable:
+            tableName: device_events
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event
+                  type: jsonb
+                  constraints:
+                    nullable: false
