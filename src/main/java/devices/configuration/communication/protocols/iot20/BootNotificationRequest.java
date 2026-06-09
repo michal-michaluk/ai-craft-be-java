@@ -1,8 +1,21 @@
 package devices.configuration.communication.protocols.iot20;
 
+import devices.configuration.communication.BootNotification;
+
 record BootNotificationRequest(
         Device device,
         Reason reason) {
+
+    BootNotification toBootNotification(String deviceId) {
+        return new BootNotification(
+                deviceId,
+                "iot20",
+                device.vendorName,
+                device.model,
+                device.serialNumber,
+                device.firmwareVersion
+        );
+    }
 
     record Device(
             String serialNumber,

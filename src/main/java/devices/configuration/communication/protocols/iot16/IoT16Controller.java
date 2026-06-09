@@ -1,13 +1,11 @@
 package devices.configuration.communication.protocols.iot16;
 
+import devices.configuration.communication.CommunicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Clock;
-import java.time.Instant;
 
 import static devices.configuration.communication.protocols.iot16.BootNotificationResponse.Status.Accepted;
 
@@ -15,15 +13,16 @@ import static devices.configuration.communication.protocols.iot16.BootNotificati
 @RequiredArgsConstructor
 class IoT16Controller {
 
-    private final Clock clock;
+    private final CommunicationService communicationService;
 
     @PostMapping(path = "/protocols/iot16/bootnotification/{deviceId}",
             consumes = "application/json", produces = "application/json")
     BootNotificationResponse handleBootNotification(@PathVariable String deviceId,
                                                     @RequestBody BootNotificationRequest request) {
+        var response = communicationService.handleBoot(deviceId, request.toBootNotification(deviceId));
         return BootNotificationResponse.builder()
-                .currentTime(Instant.now(clock).toString())
-                .interval(1800)
+                .currentTime(response.currentTime().toString())
+                .interval(response.intervalSeconds())
                 .status(Accepted)
                 .build();
     }

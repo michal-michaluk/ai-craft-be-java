@@ -1,5 +1,6 @@
 package devices.configuration.communication.protocols.iot20;
 
+import devices.configuration.communication.CommunicationService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Clock;
 import java.time.Instant;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,12 +24,16 @@ class IoT20ControllerTest {
     @Autowired
     private MockMvc rest;
     @MockitoBean
-    private Clock clock;
+    private CommunicationService communicationService;
 
     @Test
     void updateAll() throws Exception {
-        Mockito.when(clock.instant())
-                .thenReturn(Instant.parse("2023-06-28T06:15:30.00Z"));
+        Mockito.when(communicationService.handleBoot(
+                        eq("device-id"), any()
+                ))
+                .thenReturn(new CommunicationService.HeartbeatResponse(
+                        Instant.parse("2023-06-28T06:15:30.00Z"), 1800
+                ));
 
 
         rest.perform(post("/protocols/iot20/bootnotification/{deviceId}", "device-id")
@@ -58,6 +64,6 @@ class IoT20ControllerTest {
                                 }
                         """, true));
 
-        Mockito.verify(clock).instant();
+        Mockito.verify(communicationService).handleBoot(eq("device-id"), any());
     }
 }
