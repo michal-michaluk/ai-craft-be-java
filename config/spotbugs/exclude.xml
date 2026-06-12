@@ -1,0 +1,3 @@
+<FindBugsFilter>
+  <!-- Add known false positives here -->
+</FindBugsFilter>

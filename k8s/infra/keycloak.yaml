@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: devices
+data:
+  iot-realm.json: |
+    {
+      "realm": "iot",
+      "enabled": true,
+      "sslRequired": "external",
+      "registrationAllowed": false,
+      "loginWithEmailAllowed": true,
+      "roles": {
+        "realm": [
+          { "name": "user", "description": "Regular user" },
+          { "name": "admin", "description": "Administrator" }
+        ]
+      },
+      "users": [
+        {
+          "username": "john",
+          "enabled": true,
+          "email": "john@test.com",
+          "firstName": "John",
+          "lastName": "Doe",
+          "credentials": [{ "type": "password", "value": "john" }],
+          "realmRoles": ["user"]
+        },
+        {
+          "username": "jane",
+          "enabled": true,
+          "email": "jane@test.com",
+          "firstName": "Jane",
+          "lastName": "Doe",
+          "credentials": [{ "type": "password", "value": "jane" }],
+          "realmRoles": ["user"]
+        },
+        {
+          "username": "admin",
+          "enabled": true,
+          "email": "admin@test.com",
+          "firstName": "Admin",
+          "lastName": "User",
+          "credentials": [{ "type": "password", "value": "admin" }],
+          "realmRoles": ["admin"]
+        }
+      ],
+      "clients": [
+        {
+          "clientId": "iot-service",
+          "enabled": true,
+          "publicClient": false,
+          "secret": "secret",
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": false,
+          "standardFlowEnabled": false,
+          "protocol": "openid-connect",
+          "attributes": {
+            "access.token.lifespan": "3600"
+          }
+        }
+      ]
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devices-keycloak
+  namespace: devices
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: devices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.6.1
+          args:
+            - start-dev
+            - --import-realm
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              value: admin
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              value: admin
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_PROXY
+              value: edge
+          startupProbe:
+            httpGet:
+              path: /realms/iot/.well-known/openid-configuration
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 15
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm

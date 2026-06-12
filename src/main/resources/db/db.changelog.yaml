@@ -1,0 +1,269 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 0001-features-configuration
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: features_configuration
+            columns:
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: configuration
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0002-device-document
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: device_document
+            columns:
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: device
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0003-device-events
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: device_events
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0004-device-reads
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: device_reads
+            columns:
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: operator
+                  type: varchar(255)
+              - column:
+                  name: provider
+                  type: varchar(255)
+              - column:
+                  name: pin
+                  type: jsonb
+              - column:
+                  name: summary
+                  type: jsonb
+              - column:
+                  name: details
+                  type: jsonb
+              - column:
+                  name: statuses
+                  type: jsonb
+              - column:
+                  name: boot
+                  type: jsonb
+
+  - changeSet:
+      id: 0005-known-device
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: known_device
+            columns:
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: state
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0007-device
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: device
+            columns:
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: operator
+                  type: varchar(255)
+              - column:
+                  name: provider
+                  type: varchar(255)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: house_number
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: postal_code
+                  type: varchar(255)
+              - column:
+                  name: state
+                  type: varchar(255)
+              - column:
+                  name: country
+                  type: varchar(255)
+              - column:
+                  name: longitude
+                  type: numeric(18, 15)
+              - column:
+                  name: latitude
+                  type: numeric(18, 15)
+              - column:
+                  name: auto_start
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: remote_control
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: billing
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reimbursement
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: show_on_map
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: public_access
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0008-opening-hours
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: opening_hours
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_opening_hours_device
+                    references: device(device_id)
+              - column:
+                  name: day_of_week
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: open24h
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: closed
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: open
+                  type: smallint
+              - column:
+                  name: close
+                  type: smallint

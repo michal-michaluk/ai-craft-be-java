@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.type.json_format_mapper: devices.configuration.tools.Jackson3JsonFormatMapper
+  liquibase:
+    change-log: classpath:db/db.changelog.yaml
+    drop-first: true
+
+outbox:
+  delay: PT0.1S
+  batch: 1000

@@ -1,0 +1,178 @@
+plugins {
+    id "org.springframework.boot" version "4.0.6"
+    id "io.spring.dependency-management" version "1.1.7"
+    id "java"
+    id "com.google.cloud.tools.jib" version "3.4.5"
+    id "jacoco"
+    id "info.solidsoft.pitest" version "1.19.0"
+    id "com.github.spotbugs" version "6.4.8"
+}
+
+group = "ddd-by-example"
+version = "1.0.0"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.springframework.retry:spring-retry:2.0.13"
+    implementation "io.micrometer:micrometer-registry-prometheus"
+    runtimeOnly "org.postgresql:postgresql"
+    implementation "org.springframework.boot:spring-boot-starter-liquibase"
+
+
+    annotationProcessor "org.projectlombok:lombok:1.18.46"
+
+    //Tests
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("org.junit.platform:junit-platform-launcher:6.0.3") {
+        because "Spring Boot 4.0.6 pins this to 1.14.2 which is incompatible with JUnit 6.0.3"
+    }
+    testImplementation "org.testcontainers:testcontainers:2.0.5"
+    testImplementation "org.testcontainers:testcontainers-kafka:2.0.5"
+    testImplementation "org.testcontainers:testcontainers-postgresql:2.0.5"
+    testImplementation "org.awaitility:awaitility"
+    testImplementation "au.com.dius.pact.consumer:junit5:4.7.1"
+    testImplementation "au.com.dius.pact.provider:junit5spring:4.7.1"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-webflux"
+    testImplementation "com.github.dasniko:testcontainers-keycloak:4.2.1"
+    testImplementation "com.tngtech.archunit:archunit-junit5:1.4.2"
+
+    spotbugs "com.github.spotbugs:spotbugs:4.9.8"
+    spotbugs "com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0"
+}
+
+configurations {
+    compileOnly { extendsFrom annotationProcessor }
+    testCompileOnly { extendsFrom annotationProcessor }
+    testAnnotationProcessor { extendsFrom annotationProcessor }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+pitest {
+    targetClasses = ["devices.configuration.*"]
+    pitestVersion = "1.25.4"
+    threads = 4
+    outputFormats = ["XML", "HTML"]
+    timestampedReports = false
+    junit5PluginVersion = "1.2.3"
+}
+
+spotbugs {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "medium"
+    includeFilter = file("config/spotbugs/include.xml")
+    excludeFilter = file("config/spotbugs/exclude.xml")
+}
+
+spotbugsMain {
+    reports {
+        html {
+            required = true
+            outputLocation = file("${buildDir}/reports/spotbugs/main.html")
+        }
+        sarif {
+            required = true
+            outputLocation = file("${buildDir}/reports/spotbugs/main.sarif")
+        }
+    }
+}
+
+spotbugsTest {
+    reports {
+        html {
+            required = true
+            outputLocation = file("${buildDir}/reports/spotbugs/test.html")
+        }
+    }
+}
+
+tasks.register("trivyScan", Exec) {
+    dependsOn build
+    description = "Run Trivy vulnerability scanner (requires Docker)"
+    group = "Security"
+    commandLine "docker", "run", "--rm",
+        "-v", "${projectDir}:/project",
+        "-v", "/var/run/docker.sock:/var/run/docker.sock",
+        "aquasec/trivy:latest",
+        "filesystem",
+        "--scanners", "vuln,secret,misconfig",
+        "--severity", "HIGH,CRITICAL",
+        "--exit-code", "1",
+        "/project"
+}
+
+tasks.register("trivyScanImage", Exec) {
+    dependsOn jibDockerBuild
+    description = "Scan the built Docker image with Trivy"
+    group = "Security"
+    commandLine "docker", "run", "--rm",
+        "-v", "/var/run/docker.sock:/var/run/docker.sock",
+        "aquasec/trivy:latest",
+        "image",
+        "--severity", "HIGH,CRITICAL",
+        "--exit-code", "1",
+        "devices-configuration:latest"
+}
+
+compileJava {
+    options.incremental = true
+    options.compilerArgs << "-parameters"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+compileTestJava {
+    options.incremental = true
+    options.compilerArgs << "-parameters"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:25-jdk"
+    }
+    to {
+        image = "devices-configuration"
+        tags = ["latest"]
+    }
+    container {
+        mainClass = "devices.configuration.AppRunner"
+        ports = ["8080"]
+        jvmFlags = ["-XX:+UseZGC", "-XX:MaxRAMPercentage=75"]
+        environment = [
+            "SPRING_OUTPUT_ANSI_ENABLED": "never"
+        ]
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+}
