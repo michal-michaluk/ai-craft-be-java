@@ -225,6 +225,26 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
+      id: 0009-interval-rules
+      author: michal.michaluk
+      changes:
+        - createTable:
+            tableName: interval_rules
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  defaultValue: "default"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: rules
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+  - changeSet:
       id: 0008-opening-hours
       author: michal.michaluk
       changes:

@@ -2,6 +2,26 @@
 
 This repository uses architecture-first development. Before coding, load the relevant docs from `src/docs` and follow them strictly.
 
+## Document Structure
+
+The documentation is organized into focused documents covering specific aspects of the architecture:
+
+- **@src/docs/code-structure.md**: Package layout, naming conventions, module organization — read first for project orientation
+- **@src/docs/ports.md**: Primary/secondary ports and mediator-based cross-context contracts — read when adding services or repository interfaces
+- **@src/docs/domain-model.md**: Domain-Driven Design patterns (Aggregates, Value Objects, Domain Events) and unit testing — read when adding or changing business logic
+- **@src/docs/policy.md**: Business calculations and decision policies — read when implementing business rules
+- **@src/docs/adapter-http-command.md**: Write-side HTTP controllers and command DTO mapping — read when adding REST write endpoints
+- **@src/docs/adapter-http-query.md**: Read-side HTTP endpoints, pagination, and content negotiation — read when adding REST query endpoints
+- **@src/docs/adapter-persistence-event-sourcing.md**: Event-sourcing repository (event store + replay) — read when implementing event-sourced persistence
+- **@src/docs/adapter-persistence-document.md**: JSONB document snapshot persistence with optional event history — read when implementing document-style persistence
+- **@src/docs/adapter-persistence-normalizing.md**: Normalized relational mapping adapter — read when implementing relational persistence
+- **@src/docs/adapter-projection.md**: Event-driven projection / read-model update patterns — read when adding read model projections
+- **@src/docs/adapter-mediator.md**: Cross-context orchestration adapter rules — read when implementing cross-context flows
+- **@src/docs/context-boundaries.md**: Bounded contexts, shared kernel, dependency policy — read when adding new bounded contexts
+- **@src/docs/security.md**: OAuth2 security, endpoint protection, Keycloak test setup — read when adding new endpoints
+- **@src/docs/testing.md**: Test pyramid, fixtures, integration tests, custom assertions — read before writing tests
+- **@src/docs/arch-unit.md**: Architecture rules and how to add/update context architecture tests — read when adding new contexts
+
 ## Mandatory Workflow
 
 1. Identify the task type (domain change, API, persistence, projection, cross-context flow, tests).
@@ -14,21 +34,21 @@ If a task touches multiple contexts, read `src/docs/context-boundaries.md` and `
 
 ## Document Map (What to read for what)
 
-- `@src/docs/code-structure.md`: package layout, naming conventions, module organization.
-- `@src/docs/ports.md`: primary/secondary ports and mediator-based cross-context contracts.
-- `@src/docs/domain-model.md`: aggregates, value objects, domain events, invariant placement.
-- `@src/docs/policy.md`: business calculations and decision policies (static, strategy, configured).
-- `@src/docs/adapter-http-command.md`: write-side HTTP controllers and command DTO mapping.
-- `@src/docs/adapter-http-query.md`: read-side HTTP endpoints and pagination/read payload patterns.
-- `@src/docs/adapter-persistence-event-sourcing.md`: event-sourcing repositories and replay/save flow.
-- `@src/docs/adapter-persistence-document.md`: document snapshot persistence with history.
-- `@src/docs/adapter-persistence-normalizing.md`: normalized relational mapping adapter.
-- `@src/docs/adapter-projection.md`: event-driven projection/read-model update patterns.
-- `@src/docs/adapter-mediator.md`: cross-context orchestration adapter rules.
-- `@src/docs/context-boundaries.md`: bounded contexts, shared kernel, dependency policy.
-- `@src/docs/security.md`: current security posture and required explicit authN/authZ decisions.
-- `@src/docs/testing.md`: test pyramid, fixtures, integration tests, custom asserts.
-- `@src/docs/arch-unit.md`: architecture rules and how to add/update context architecture tests.
+- `src/docs/code-structure.md`: package layout, naming conventions, module organization.
+- `src/docs/ports.md`: primary/secondary ports and mediator-based cross-context contracts.
+- `src/docs/domain-model.md`: aggregates, value objects, domain events, invariant placement.
+- `src/docs/policy.md`: business calculations and decision policies (static, strategy, configured).
+- `src/docs/adapter-http-command.md`: write-side HTTP controllers and command DTO mapping.
+- `src/docs/adapter-http-query.md`: read-side HTTP endpoints and pagination/read payload patterns.
+- `src/docs/adapter-persistence-event-sourcing.md`: event-sourcing repositories and replay/save flow.
+- `src/docs/adapter-persistence-document.md`: document snapshot persistence with history.
+- `src/docs/adapter-persistence-normalizing.md`: normalized relational mapping adapter.
+- `src/docs/adapter-projection.md`: event-driven projection/read-model update patterns.
+- `src/docs/adapter-mediator.md`: cross-context orchestration adapter rules.
+- `src/docs/context-boundaries.md`: bounded contexts, shared kernel, dependency policy.
+- `src/docs/security.md`: current security posture and required explicit authN/authZ decisions.
+- `src/docs/testing.md`: test pyramid, fixtures, integration tests, custom asserts.
+- `src/docs/arch-unit.md`: architecture rules and how to add/update context architecture tests.
 
 ## Hard Constraints
 
@@ -53,6 +73,10 @@ If a task touches multiple contexts, read `src/docs/context-boundaries.md` and `
 - No skipping architecture tests for new contexts.
 - No testing domain logic only through integration tests.
 - No mutable shared fixture instances across tests.
+
+## Available Skills
+
+- `.agents/skills/reverse-engineering/` — Reverse-engineer architecture docs from source code. Use when asked to document architecture, patterns, or design decisions.
 
 ## Quick Task Routing
 

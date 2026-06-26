@@ -1,6 +1,6 @@
 # ddd-devices
 
-Reference implementation of a modular monolith for device configuration using Domain-Driven Design and Prots and Adapters patterns.
+Reference implementation of a modular monolith for device configuration using Domain-Driven Design and Ports and Adapters patterns.
 
 ## Architecture Documentation
 
