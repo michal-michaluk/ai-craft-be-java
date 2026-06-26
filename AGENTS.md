@@ -1,26 +1,26 @@
 # AGENTS
 
-This repository uses architecture-first development. Before coding, load the relevant docs from `src/docs` and follow them strictly.
+This repository uses architecture-first development. Before coding, load the relevant docs from `docs/arch` and follow them strictly.
 
 ## Document Structure
 
 The documentation is organized into focused documents covering specific aspects of the architecture:
 
-- **@src/docs/code-structure.md**: Package layout, naming conventions, module organization — read first for project orientation
-- **@src/docs/ports.md**: Primary/secondary ports and mediator-based cross-context contracts — read when adding services or repository interfaces
-- **@src/docs/domain-model.md**: Domain-Driven Design patterns (Aggregates, Value Objects, Domain Events) and unit testing — read when adding or changing business logic
-- **@src/docs/policy.md**: Business calculations and decision policies — read when implementing business rules
-- **@src/docs/adapter-http-command.md**: Write-side HTTP controllers and command DTO mapping — read when adding REST write endpoints
-- **@src/docs/adapter-http-query.md**: Read-side HTTP endpoints, pagination, and content negotiation — read when adding REST query endpoints
-- **@src/docs/adapter-persistence-event-sourcing.md**: Event-sourcing repository (event store + replay) — read when implementing event-sourced persistence
-- **@src/docs/adapter-persistence-document.md**: JSONB document snapshot persistence with optional event history — read when implementing document-style persistence
-- **@src/docs/adapter-persistence-normalizing.md**: Normalized relational mapping adapter — read when implementing relational persistence
-- **@src/docs/adapter-projection.md**: Event-driven projection / read-model update patterns — read when adding read model projections
-- **@src/docs/adapter-mediator.md**: Cross-context orchestration adapter rules — read when implementing cross-context flows
-- **@src/docs/context-boundaries.md**: Bounded contexts, shared kernel, dependency policy — read when adding new bounded contexts
-- **@src/docs/security.md**: OAuth2 security, endpoint protection, Keycloak test setup — read when adding new endpoints
-- **@src/docs/testing.md**: Test pyramid, fixtures, integration tests, custom assertions — read before writing tests
-- **@src/docs/arch-unit.md**: Architecture rules and how to add/update context architecture tests — read when adding new contexts
+- **@docs/arch/code-structure.md**: Package layout, naming conventions, module organization — read first for project orientation
+- **@docs/arch/ports.md**: Primary/secondary ports and mediator-based cross-context contracts — read when adding services or repository interfaces
+- **@docs/arch/domain-model.md**: Domain-Driven Design patterns (Aggregates, Value Objects, Domain Events) and unit testing — read when adding or changing business logic
+- **@docs/arch/policy.md**: Business calculations and decision policies — read when implementing business rules
+- **@docs/arch/adapter-http-command.md**: Write-side HTTP controllers and command DTO mapping — read when adding REST write endpoints
+- **@docs/arch/adapter-http-query.md**: Read-side HTTP endpoints, pagination, and content negotiation — read when adding REST query endpoints
+- **@docs/arch/adapter-persistence-event-sourcing.md**: Event-sourcing repository (event store + replay) — read when implementing event-sourced persistence
+- **@docs/arch/adapter-persistence-document.md**: JSONB document snapshot persistence with optional event history — read when implementing document-style persistence
+- **@docs/arch/adapter-persistence-normalizing.md**: Normalized relational mapping adapter — read when implementing relational persistence
+- **@docs/arch/adapter-projection.md**: Event-driven projection / read-model update patterns — read when adding read model projections
+- **@docs/arch/adapter-mediator.md**: Cross-context orchestration adapter rules — read when implementing cross-context flows
+- **@docs/arch/context-boundaries.md**: Bounded contexts, shared kernel, dependency policy — read when adding new bounded contexts
+- **@docs/arch/security.md**: OAuth2 security, endpoint protection, Keycloak test setup — read when adding new endpoints
+- **@docs/arch/testing.md**: Test pyramid, fixtures, integration tests, custom assertions — read before writing tests
+- **@docs/arch/arch-unit.md**: Architecture rules and how to add/update context architecture tests — read when adding new contexts
 
 ## Mandatory Workflow
 
@@ -30,25 +30,25 @@ The documentation is organized into focused documents covering specific aspects 
 4. Add or update tests in the same context package.
 5. Verify ArchUnit constraints remain valid.
 
-If a task touches multiple contexts, read `src/docs/context-boundaries.md` and `src/docs/adapter-mediator.md` first.
+If a task touches multiple contexts, read `docs/arch/context-boundaries.md` and `docs/arch/adapter-mediator.md` first.
 
 ## Document Map (What to read for what)
 
-- `src/docs/code-structure.md`: package layout, naming conventions, module organization.
-- `src/docs/ports.md`: primary/secondary ports and mediator-based cross-context contracts.
-- `src/docs/domain-model.md`: aggregates, value objects, domain events, invariant placement.
-- `src/docs/policy.md`: business calculations and decision policies (static, strategy, configured).
-- `src/docs/adapter-http-command.md`: write-side HTTP controllers and command DTO mapping.
-- `src/docs/adapter-http-query.md`: read-side HTTP endpoints and pagination/read payload patterns.
-- `src/docs/adapter-persistence-event-sourcing.md`: event-sourcing repositories and replay/save flow.
-- `src/docs/adapter-persistence-document.md`: document snapshot persistence with history.
-- `src/docs/adapter-persistence-normalizing.md`: normalized relational mapping adapter.
-- `src/docs/adapter-projection.md`: event-driven projection/read-model update patterns.
-- `src/docs/adapter-mediator.md`: cross-context orchestration adapter rules.
-- `src/docs/context-boundaries.md`: bounded contexts, shared kernel, dependency policy.
-- `src/docs/security.md`: current security posture and required explicit authN/authZ decisions.
-- `src/docs/testing.md`: test pyramid, fixtures, integration tests, custom asserts.
-- `src/docs/arch-unit.md`: architecture rules and how to add/update context architecture tests.
+- `docs/arch/code-structure.md`: package layout, naming conventions, module organization.
+- `docs/arch/ports.md`: primary/secondary ports and mediator-based cross-context contracts.
+- `docs/arch/domain-model.md`: aggregates, value objects, domain events, invariant placement.
+- `docs/arch/policy.md`: business calculations and decision policies (static, strategy, configured).
+- `docs/arch/adapter-http-command.md`: write-side HTTP controllers and command DTO mapping.
+- `docs/arch/adapter-http-query.md`: read-side HTTP endpoints and pagination/read payload patterns.
+- `docs/arch/adapter-persistence-event-sourcing.md`: event-sourcing repositories and replay/save flow.
+- `docs/arch/adapter-persistence-document.md`: document snapshot persistence with history.
+- `docs/arch/adapter-persistence-normalizing.md`: normalized relational mapping adapter.
+- `docs/arch/adapter-projection.md`: event-driven projection/read-model update patterns.
+- `docs/arch/adapter-mediator.md`: cross-context orchestration adapter rules.
+- `docs/arch/context-boundaries.md`: bounded contexts, shared kernel, dependency policy.
+- `docs/arch/security.md`: current security posture and required explicit authN/authZ decisions.
+- `docs/arch/testing.md`: test pyramid, fixtures, integration tests, custom asserts.
+- `docs/arch/arch-unit.md`: architecture rules and how to add/update context architecture tests.
 
 ## Hard Constraints
 
